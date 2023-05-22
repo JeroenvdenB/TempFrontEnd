@@ -1,0 +1,33 @@
+<h1> Ophalen uit backend </h1>
+
+<script>
+
+	//http://localhost:8090/
+
+	function allRooms(){
+		var xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function(){
+			if (this.readyState == 4){
+				var response = this.responseText;
+				var responseObj = JSON.parse(response);
+				console.log(response);
+				console.log(JSON.parse(response));
+				document.getElementById("output").innerHTML = responseObj[0].type;
+			}
+		}
+		
+		xhr.open("GET", "http://localhost:8090/allRooms", true);
+		xhr.send();
+	}
+	
+		function test(){
+			alert("test");
+		}
+		
+
+</script>
+
+<button onclick="test()">Test</button>
+<button onclick="allRooms()">Get rooms</button>
+
+<div id="output"> Output-veld </div>

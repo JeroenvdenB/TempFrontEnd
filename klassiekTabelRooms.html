@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script>
+
+        function showRooms(){
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function (){
+                if(this.readyState == 4) {
+                    console.log(this.responseText);
+                    var allRooms = JSON.parse(this.responseText);
+                    var finalString = "<table border=1>";
+                    var keys = ["type", "price", "reserved", "date_bookings", "room_no"]
+                    for (var x = 0; x < allRooms.length; x++){
+                        // console.log(allRooms[x]);
+                        finalString += "<tr><td>" + allRooms[x].type + "</td>" + 
+                            "<td>" + allRooms[x].price +"</td>" +
+                            "<td>" + allRooms[x].reserved + "</td>" + 
+                            "<td>" + allRooms[x].date_bookings + "</td>" +
+                            "<td>" + allRooms[x].room_no + "</td></tr>";
+                    }
+                    finalString += "</table>";
+                    document.getElementById("allRoomsTable").innerHTML = finalString;               
+                }
+            }
+            xhr.open("GET", "http://localhost:8090/allRooms",true);
+            xhr.send();
+        }
+
+        function addRoom(){
+            var newRoom = {}; //create an empty object
+            newRoom.type = document.getElementById("roomType").value;
+            newRoom.price = document.getElementById("roomPrice").value;
+            newRoom.room_no = document.getElementById("roomNo").value;
+
+            console.log(newRoom);
+
+            var newRoomJSON = JSON.stringify(newRoom);
+
+            console.log(newRoomJSON);
+
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function (){
+                if(this.readyState == 4) {
+                    console.log("Toevoegen gelukt");
+                }
+            }
+            xhr.open("POST", "http://localhost:8090/addRoom", true);
+            xhr.setRequestHeader("Content-Type","application/json");
+            xhr.send(newRoomJSON);
+            
+        }
+
+
+
+    </script>
+</head>
+<body>
+    <input type="text" id="roomType"> Room Type</input><br>
+    <input type="text" id="roomPrice"> Room price</input><br>
+    <input type="text" id="roomNo"> Room Number</input>
+    <p></p>
+    <button onclick="showRooms()">Show all rooms</button> 
+    <button onclick="addRoom()">Add room</button>
+    <p></p>
+
+    <div id="allRoomsTable"></div>
+</body>
+</html>
